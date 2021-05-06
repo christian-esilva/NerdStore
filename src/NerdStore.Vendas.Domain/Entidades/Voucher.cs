@@ -18,5 +18,13 @@ namespace NerdStore.Vendas.Domain.Entidades
         public DateTime DataValidade { get; private set; }
         public bool Ativo { get; private set; }
         public bool Utilizado { get; private set; }
+
+        //EF relacionamento
+        public ICollection<Pedido> Pedidos { get; set; }
+
+        protected static bool DataVencimentoSuperiorAtual(DateTime dataValidade)
+        {
+            return dataValidade >= DateTime.Now;
+        }
     }
 }

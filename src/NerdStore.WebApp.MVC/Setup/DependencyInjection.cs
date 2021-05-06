@@ -7,10 +7,14 @@ using NerdStore.Catalogo.Data.Repositories;
 using NerdStore.Catalogo.Domain.Events;
 using NerdStore.Catalogo.Domain.Interfaces;
 using NerdStore.Catalogo.Domain.Services;
-using NerdStore.Core.Bus;
+using NerdStore.Core.Communication.Mediator;
 using NerdStore.Core.Interfaces;
+using NerdStore.Core.Messages.CommonMessages.Notifications;
 using NerdStore.Vendas.Application.Commands;
 using NerdStore.Vendas.Application.Handlers;
+using NerdStore.Vendas.Data;
+using NerdStore.Vendas.Data.Repositories;
+using NerdStore.Vendas.Domain.Interfaces;
 
 namespace NerdStore.WebApp.MVC.Setup
 {
@@ -19,11 +23,15 @@ namespace NerdStore.WebApp.MVC.Setup
         public static void RegisterServices(this IServiceCollection services)
         {
             // Mediator
-            services.AddScoped<IMediatrHandler, MediatrHandler>();
+            services.AddScoped<IMediatorHandler, MediatorHandler>();
+
+            // Notifications
+            services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
 
             // Catalogo
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IProdutoAppService, ProdutoAppService>();
+            
             services.AddScoped<IEstoqueService, EstoqueService>();
             services.AddScoped<CatalogoContext>();
 
@@ -31,6 +39,8 @@ namespace NerdStore.WebApp.MVC.Setup
 
             // Vendas
             services.AddScoped<IRequestHandler<AdicionarItemPedidoCommand, bool>, PedidoCommandHandler>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<VendasContext>();
         }
     }
 }
